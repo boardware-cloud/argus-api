@@ -1,4 +1,4 @@
-module github.com/boardware-cloud/argus
+module github.com/boardware-cloud/argusapi
 
 go 1.20
 
