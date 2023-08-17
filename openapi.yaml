@@ -1,0 +1,380 @@
+openapi: 3.0.3
+info:
+  title: BoardWare Argus APIs
+  description: |-
+    BoardWare cloud Argus monitoring service api
+  contact:
+    email: dan.chen@boardware.com
+  version: 0.0.6
+servers:
+  - url: http://localhost/argus/api/v1
+tags:
+  - name: Monitor
+    description: Api of monitor
+paths:
+  /monitors:
+    post:
+      tags:
+        - Monitor
+      description: Create monitor
+      operationId: CreateMonitor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMonitorRequest'
+      responses:
+        '201':
+          description: Success create monitor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+    get:
+      tags:
+        - Monitor
+      description: List monitors
+      operationId: ListMonitors
+      parameters:
+        - $ref: '#/components/parameters/Ordering'
+        - $ref: '#/components/parameters/IndexParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Success List monitors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorList'
+  /monitors/{id}:
+    get:
+      tags:
+        - Monitor
+      summary: Get a monitor by ID
+      operationId: GetMonitor
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Success get monitor detail'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+    put:
+      tags:
+        - Monitor
+      description: Update monitor detail
+      operationId: UpdateMonitor
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMonitorRequest'
+      responses:
+        '200':
+          description: Success get monitor detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+    delete:
+      tags:
+        - Monitor
+      description: Delete uptime monitor
+      operationId: DeleteMonitor
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '204':
+          description: Success delete uptime monitor
+  /monitors/{id}/records:
+    get:
+      tags:
+        - Monitor
+      summary: Get a monitor by ID
+      operationId: ListMonitoringRecords
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - $ref: '#/components/parameters/IndexParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/StartAt'
+        - $ref: '#/components/parameters/EndAt'
+      responses:
+        '200':
+          description: 'Success get monitor records list'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoringRecordList'
+components:
+  schemas:
+    MonitorProperties:
+      type: object
+      required:
+        - name
+        - description
+        - interval
+        - timeout
+        - type
+        - url
+        - notifications
+        - notificationInterval
+        - status
+        - retries
+        - reports
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/MonitorType'
+        interval:
+          description: Check interval in seconds
+          type: integer
+          format: int64
+        timeout:
+          description: Timeout in seconds
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/MonitorStatus'
+        url:
+          type: string
+        retries:
+          type: integer
+          format: int64
+        method:
+          $ref: '#/components/schemas/HttpMethod'
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pair'
+        acceptedStatusCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pair'
+        notificationInterval:
+          type: integer
+          format: int64
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Report'
+    Monitor:
+      description: 'Uptime Monitor'
+      allOf:
+        - $ref: '#/components/schemas/MonitorProperties'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+    MonitorStatus:
+      description: 'Monitor Status'
+      type: string
+      enum: [ACTIVED, DISACTIVED]
+    MonitorList:
+      description: 'Monitor list'
+      type: object
+      required:
+        - data
+        - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Monitor'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    CreateMonitorRequest:
+      description: 'Create monitor request payload schema'
+      allOf:
+        - $ref: '#/components/schemas/MonitorProperties'
+        - type: object
+    UpdateMonitorRequest:
+      description: 'Update monitor request payload schema'
+      allOf:
+        - $ref: '#/components/schemas/MonitorProperties'
+        - type: object
+    MonitorType:
+      type: string
+      enum: [ HTTP ]
+    MonitoringRecord:
+      description: 'Monitoring record'
+      type: object
+      required:
+        - id
+        - monitorId
+        - checkedAt
+        - statusCode
+        - result
+      properties:
+        id:
+          type: string
+        monitorId:
+          type: string
+        checkedAt:
+          type: integer
+          format: int64
+        statusCode:
+          type: string
+        responseTime:
+          type: integer
+          format: int64
+        result:
+          $ref: '#/components/schemas/MonitoringResult'
+    MonitoringRecordList:
+      type: object
+      required:
+        - data
+        - pagination
+      properties:
+        data:
+          type: array
+          items: 
+            $ref: '#/components/schemas/MonitoringRecord'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    MonitoringResult:
+      type: string
+      enum: ['OK', 'TIMEOUT','DOWN']
+    HttpMethod:
+      type: string
+      enum: [ HEAD, GET, POST, PUT, PATCH ]
+    Report:
+      type: object
+      properties:
+        cron:
+          type: string
+        period:
+          type: integer
+          format: int64
+        emailReceivers:
+          $ref: '#/components/schemas/EmailReceivers'
+    EmailReceivers:
+      type: object
+      required:
+        - to
+        - cc
+        - bcc
+      properties:
+        to:
+          type: array
+          items:
+            type: string
+        cc:
+          type: array
+          items:
+            type: string
+        bcc:
+          type: array
+          items:
+            type: string
+    Notification:
+      allOf:
+        - type: object
+          required:
+            - type
+            - interval
+          properties:
+            type:
+              $ref: '#/components/schemas/NotificationType'
+            emailReceivers:
+              $ref: '#/components/schemas/EmailReceivers'
+    NotificationType:
+      type: string
+      enum: [EMAIL]
+    Ordering:
+      description: 'Ordering'
+      type: string
+      enum: [ ASCENDING, DESCENDING ]
+    Pagination:
+      description: 'Pagination'
+      type: object
+      required:
+        - index
+        - limit
+        - total
+      properties:
+        index:
+          type: integer
+          description: 'Current page'
+        limit:
+          type: integer
+          description: 'Amount per page'
+        total:
+          type: integer
+          format: int64
+          description: 'Total page'
+    Pair:
+      type: object
+      required:
+        - left
+        - right
+      properties:
+        left:
+          type: string
+        right:
+          type: string
+  parameters:
+    Ordering:
+      name: ordering
+      description: 'Ordering mode'
+      in: query
+      schema:
+        $ref: '#/components/schemas/Ordering'
+    IndexParam:
+      name: index
+      in: query
+      description: 'Current page index'
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    LimitParam:
+      name: limit
+      in: query
+      description: 'Total pages'
+      schema:
+        type: integer
+        minimum: 1
+        default: 10
+    StartAt:
+      name: startAt
+      in: query
+      description: 'Unix timestamp Start at.'
+      schema:
+        type: integer
+        format: int64
+    EndAt:
+      name: endAt
+      in: query
+      description: 'Unix timestamp End at.'
+      schema:
+        type: integer
+        format: int64
