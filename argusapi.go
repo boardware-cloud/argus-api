@@ -6,21 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Pair struct {
-	Left  string `json:"left" binding:"required"`
-	Right string `json:"right" binding:"required"`
+type Notification struct {
+	Type           NotificationType `json:"type" binding:"required"`
+	EmailReceivers *EmailReceivers  `json:"emailReceivers,omitempty"`
 }
-type Monitor struct {
+type CreateMonitorRequest struct {
 	MonitorProperties
-	Id string `json:"id" binding:"required"`
-}
-type UpdateMonitorRequest struct {
-	MonitorProperties
-}
-type Pagination struct {
-	Total int64 `json:"total" binding:"required"`
-	Index int64 `json:"index" binding:"required"`
-	Limit int64 `json:"limit" binding:"required"`
 }
 type MonitorList struct {
 	Data       []Monitor  `json:"data" binding:"required"`
@@ -31,65 +22,58 @@ type Report struct {
 	Period         *int64          `json:"period,omitempty"`
 	EmailReceivers *EmailReceivers `json:"emailReceivers,omitempty"`
 }
-type Notification struct {
-	Type           NotificationType `json:"type" binding:"required"`
-	EmailReceivers *EmailReceivers  `json:"emailReceivers,omitempty"`
+type Pair struct {
+	Left  string `json:"left" binding:"required"`
+	Right string `json:"right" binding:"required"`
 }
 type MonitorProperties struct {
-	Url                  string         `json:"url" binding:"required"`
-	Retries              int64          `json:"retries" binding:"required"`
-	Type                 MonitorType    `json:"type" binding:"required"`
-	Interval             int64          `json:"interval" binding:"required"`
-	Status               MonitorStatus  `json:"status" binding:"required"`
-	Method               *HttpMethod    `json:"method,omitempty"`
 	NotificationInterval int64          `json:"notificationInterval" binding:"required"`
-	Reports              []Report       `json:"reports" binding:"required"`
-	Name                 string         `json:"name" binding:"required"`
-	AcceptedStatusCodes  *[]Pair        `json:"acceptedStatusCodes,omitempty"`
-	Notifications        []Notification `json:"notifications" binding:"required"`
 	Description          string         `json:"description" binding:"required"`
 	Timeout              int64          `json:"timeout" binding:"required"`
+	Status               MonitorStatus  `json:"status" binding:"required"`
+	Retries              int64          `json:"retries" binding:"required"`
 	Headers              *[]Pair        `json:"headers,omitempty"`
+	Type                 MonitorType    `json:"type" binding:"required"`
+	Url                  string         `json:"url" binding:"required"`
+	Reports              []Report       `json:"reports" binding:"required"`
+	Interval             int64          `json:"interval" binding:"required"`
+	Method               *HttpMethod    `json:"method,omitempty"`
+	Notifications        []Notification `json:"notifications" binding:"required"`
+	Name                 string         `json:"name" binding:"required"`
+	AcceptedStatusCodes  *[]Pair        `json:"acceptedStatusCodes,omitempty"`
 }
-type CreateMonitorRequest struct {
+type Monitor struct {
 	MonitorProperties
+	Id string `json:"id" binding:"required"`
 }
 type MonitoringRecord struct {
-	CheckedAt    int64            `json:"checkedAt" binding:"required"`
-	StatusCode   string           `json:"statusCode" binding:"required"`
-	ResponseTime *int64           `json:"responseTime,omitempty"`
 	Result       MonitoringResult `json:"result" binding:"required"`
 	Id           string           `json:"id" binding:"required"`
 	MonitorId    string           `json:"monitorId" binding:"required"`
+	CheckedAt    int64            `json:"checkedAt" binding:"required"`
+	StatusCode   string           `json:"statusCode" binding:"required"`
+	ResponseTime *int64           `json:"responseTime,omitempty"`
 }
 type MonitoringRecordList struct {
 	Data       []MonitoringRecord `json:"data" binding:"required"`
 	Pagination Pagination         `json:"pagination" binding:"required"`
 }
+type Pagination struct {
+	Index int64 `json:"index" binding:"required"`
+	Limit int64 `json:"limit" binding:"required"`
+	Total int64 `json:"total" binding:"required"`
+}
+type UpdateMonitorRequest struct {
+	MonitorProperties
+}
 type EmailReceivers struct {
+	Bcc []string `json:"bcc" binding:"required"`
 	To  []string `json:"to" binding:"required"`
 	Cc  []string `json:"cc" binding:"required"`
-	Bcc []string `json:"bcc" binding:"required"`
 }
-type NotificationType string
+type MonitorType string
 
-const EMAIL NotificationType = "EMAIL"
-
-type MonitorStatus string
-
-const ACTIVED MonitorStatus = "ACTIVED"
-const DISACTIVED MonitorStatus = "DISACTIVED"
-
-type MonitoringResult string
-
-const OK MonitoringResult = "OK"
-const TIMEOUT MonitoringResult = "TIMEOUT"
-const DOWN MonitoringResult = "DOWN"
-
-type Ordering string
-
-const ASCENDING Ordering = "ASCENDING"
-const DESCENDING Ordering = "DESCENDING"
+const HTTP MonitorType = "HTTP"
 
 type HttpMethod string
 
@@ -99,27 +83,35 @@ const POST HttpMethod = "POST"
 const PUT HttpMethod = "PUT"
 const PATCH HttpMethod = "PATCH"
 
-type MonitorType string
+type MonitorStatus string
 
-const HTTP MonitorType = "HTTP"
+const ACTIVED MonitorStatus = "ACTIVED"
+const DISACTIVED MonitorStatus = "DISACTIVED"
+
+type NotificationType string
+
+const EMAIL NotificationType = "EMAIL"
+
+type Ordering string
+
+const ASCENDING Ordering = "ASCENDING"
+const DESCENDING Ordering = "DESCENDING"
+
+type MonitoringResult string
+
+const OK MonitoringResult = "OK"
+const TIMEOUT MonitoringResult = "TIMEOUT"
+const DOWN MonitoringResult = "DOWN"
 
 type MonitorApiInterface interface {
-	ListMonitors(gin_context *gin.Context, ordering Ordering, index int64, limit int64)
 	CreateMonitor(gin_context *gin.Context, gin_body CreateMonitorRequest)
+	ListMonitors(gin_context *gin.Context, ordering Ordering, index int64, limit int64)
 	GetMonitor(gin_context *gin.Context, id string)
 	UpdateMonitor(gin_context *gin.Context, id string, gin_body UpdateMonitorRequest)
 	DeleteMonitor(gin_context *gin.Context, id string)
 	ListMonitoringRecords(gin_context *gin.Context, id string, index int64, limit int64, startAt int64, endAt int64)
 }
 
-func ListMonitorsBuilder(api MonitorApiInterface) func(c *gin.Context) {
-	return func(gin_context *gin.Context) {
-		ordering := gin_context.Query("ordering")
-		index := gin_context.Query("index")
-		limit := gin_context.Query("limit")
-		api.ListMonitors(gin_context, Ordering(ordering), stringToInt64(index), stringToInt64(limit))
-	}
-}
 func CreateMonitorBuilder(api MonitorApiInterface) func(c *gin.Context) {
 	return func(gin_context *gin.Context) {
 		var createMonitorRequest CreateMonitorRequest
@@ -128,6 +120,14 @@ func CreateMonitorBuilder(api MonitorApiInterface) func(c *gin.Context) {
 			return
 		}
 		api.CreateMonitor(gin_context, createMonitorRequest)
+	}
+}
+func ListMonitorsBuilder(api MonitorApiInterface) func(c *gin.Context) {
+	return func(gin_context *gin.Context) {
+		ordering := gin_context.Query("ordering")
+		index := gin_context.Query("index")
+		limit := gin_context.Query("limit")
+		api.ListMonitors(gin_context, Ordering(ordering), stringToInt64(index), stringToInt64(limit))
 	}
 }
 func GetMonitorBuilder(api MonitorApiInterface) func(c *gin.Context) {
@@ -164,8 +164,8 @@ func ListMonitoringRecordsBuilder(api MonitorApiInterface) func(c *gin.Context) 
 	}
 }
 func MonitorApiInterfaceMounter(gin_router *gin.Engine, gwg_api_label MonitorApiInterface) {
-	gin_router.GET("/monitors", ListMonitorsBuilder(gwg_api_label))
 	gin_router.POST("/monitors", CreateMonitorBuilder(gwg_api_label))
+	gin_router.GET("/monitors", ListMonitorsBuilder(gwg_api_label))
 	gin_router.GET("/monitors/:id", GetMonitorBuilder(gwg_api_label))
 	gin_router.PUT("/monitors/:id", UpdateMonitorBuilder(gwg_api_label))
 	gin_router.DELETE("/monitors/:id", DeleteMonitorBuilder(gwg_api_label))
