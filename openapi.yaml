@@ -275,7 +275,6 @@ components:
         - notificationInterval
         - status
         - retries
-        - reports
       properties:
         name:
           type: string
@@ -315,10 +314,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Notification'
-        reports:
-          type: array
-          items:
-            $ref: '#/components/schemas/Report'
     MonitorType:
       type: string
       enum: [ HTTP ]
