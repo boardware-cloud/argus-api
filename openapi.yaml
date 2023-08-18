@@ -188,6 +188,7 @@ components:
     Monitor:
       type: object
       required:
+        - id
         - name
         - description
         - interval
@@ -199,6 +200,8 @@ components:
         - status
         - retries
       properties:
+        id:
+          type: string
         name:
           type: string
         description:
