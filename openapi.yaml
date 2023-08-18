@@ -188,7 +188,6 @@ components:
     Monitor:
       type: object
       required:
-        - id
         - name
         - description
         - interval
@@ -199,10 +198,7 @@ components:
         - notificationInterval
         - status
         - retries
-        - reports
       properties:
-        id:
-          type: string
         name:
           type: string
         description:
@@ -241,10 +237,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Notification'
-        reports:
-          type: array
-          items:
-            $ref: '#/components/schemas/Report'
     MonitorStatus:
       description: 'Monitor Status'
       type: string
