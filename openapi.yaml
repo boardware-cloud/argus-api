@@ -22,7 +22,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateMonitorRequest'
+              $ref: '#/components/schemas/PutMonitorRequest'
       responses:
         '201':
           description: Success create monitor
@@ -80,7 +80,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateMonitorRequest'
+              $ref: '#/components/schemas/PutMonitorRequest'
       responses:
         '200':
           description: Success get monitor detail
@@ -141,6 +141,7 @@ components:
         - status
         - retries
         - reports
+        - headers
       properties:
         name:
           type: string
@@ -185,15 +186,65 @@ components:
           items:
             $ref: '#/components/schemas/Report'
     Monitor:
-      description: 'Uptime Monitor'
-      allOf:
-        - $ref: '#/components/schemas/MonitorProperties'
-        - type: object
-          required:
-            - id
-          properties:
-            id:
-              type: string
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - interval
+        - timeout
+        - type
+        - url
+        - notifications
+        - notificationInterval
+        - status
+        - retries
+        - reports
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/MonitorType'
+        interval:
+          description: Check interval in seconds
+          type: integer
+          format: int64
+        timeout:
+          description: Timeout in seconds
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/MonitorStatus'
+        url:
+          type: string
+        retries:
+          type: integer
+          format: int64
+        method:
+          $ref: '#/components/schemas/HttpMethod'
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pair'
+        acceptedStatusCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pair'
+        notificationInterval:
+          type: integer
+          format: int64
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Report'
     MonitorStatus:
       description: 'Monitor Status'
       type: string
@@ -211,16 +262,63 @@ components:
             $ref: '#/components/schemas/Monitor'
         pagination:
           $ref: '#/components/schemas/Pagination'
-    CreateMonitorRequest:
-      description: 'Create monitor request payload schema'
-      allOf:
-        - $ref: '#/components/schemas/MonitorProperties'
-        - type: object
-    UpdateMonitorRequest:
-      description: 'Update monitor request payload schema'
-      allOf:
-        - $ref: '#/components/schemas/MonitorProperties'
-        - type: object
+    PutMonitorRequest:
+      type: object
+      required:
+        - name
+        - description
+        - interval
+        - timeout
+        - type
+        - url
+        - notifications
+        - notificationInterval
+        - status
+        - retries
+        - reports
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/MonitorType'
+        interval:
+          description: Check interval in seconds
+          type: integer
+          format: int64
+        timeout:
+          description: Timeout in seconds
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/MonitorStatus'
+        url:
+          type: string
+        retries:
+          type: integer
+          format: int64
+        method:
+          $ref: '#/components/schemas/HttpMethod'
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pair'
+        acceptedStatusCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pair'
+        notificationInterval:
+          type: integer
+          format: int64
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Report'
     MonitorType:
       type: string
       enum: [ HTTP ]
