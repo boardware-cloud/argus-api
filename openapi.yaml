@@ -5,7 +5,7 @@ info:
     BoardWare cloud Argus monitoring service api
   contact:
     email: dan.chen@boardware.com
-  version: 0.0.6
+  version: 0.0.10
 servers:
   - url: http://localhost/argus/api/v1
 tags:

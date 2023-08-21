@@ -34,3 +34,5 @@ npm config set -- '//gitea.svc.boardware.com/api/packages/bwc/npm/:_authToken' "
 npm publish
 npm config set registry https://registry.npmjs.org/
 ```
+
+npm version $(npm view athena_core_apis version)
