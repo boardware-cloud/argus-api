@@ -5,7 +5,7 @@ info:
     BoardWare cloud Argus monitoring service api
   contact:
     email: dan.chen@boardware.com
-  version: 0.0.11
+  version: 0.0.13
 servers:
   - url: http://localhost/argus/api/v1
 tags:
@@ -127,64 +127,6 @@ paths:
                 $ref: '#/components/schemas/MonitoringRecordList'
 components:
   schemas:
-    MonitorProperties:
-      type: object
-      required:
-        - name
-        - description
-        - interval
-        - timeout
-        - type
-        - url
-        - notifications
-        - notificationInterval
-        - status
-        - retries
-        - reports
-        - headers
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          $ref: '#/components/schemas/MonitorType'
-        interval:
-          description: Check interval in seconds
-          type: integer
-          format: int64
-        timeout:
-          description: Timeout in seconds
-          type: integer
-          format: int64
-        status:
-          $ref: '#/components/schemas/MonitorStatus'
-        url:
-          type: string
-        retries:
-          type: integer
-          format: int64
-        method:
-          $ref: '#/components/schemas/HttpMethod'
-        headers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pair'
-        acceptedStatusCodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pair'
-        notificationInterval:
-          type: integer
-          format: int64
-        notifications:
-          type: array
-          items:
-            $ref: '#/components/schemas/Notification'
-        reports:
-          type: array
-          items:
-            $ref: '#/components/schemas/Report'
     Monitor:
       type: object
       required:
@@ -232,7 +174,7 @@ components:
         acceptedStatusCodes:
           type: array
           items:
-            $ref: '#/components/schemas/Pair'
+            type: string
         notificationInterval:
           type: integer
           format: int64
@@ -409,16 +351,14 @@ components:
           items:
             type: string
     Notification:
-      allOf:
-        - type: object
-          required:
-            - type
-            - interval
-          properties:
-            type:
-              $ref: '#/components/schemas/NotificationType'
-            emailReceivers:
-              $ref: '#/components/schemas/EmailReceivers'
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          $ref: '#/components/schemas/NotificationType'
+        emailReceivers:
+          $ref: '#/components/schemas/EmailReceivers'
     NotificationType:
       type: string
       enum: [EMAIL]
