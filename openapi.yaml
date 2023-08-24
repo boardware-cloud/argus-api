@@ -245,7 +245,7 @@ components:
         acceptedStatusCodes:
           type: array
           items:
-            $ref: '#/components/schemas/Pair'
+            type: string
         notificationInterval:
           type: integer
           format: int64
