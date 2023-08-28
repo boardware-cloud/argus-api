@@ -255,6 +255,23 @@ components:
             $ref: '#/components/schemas/Notification'
         body:
           $ref: '#/components/schemas/HttpBody'
+        httpRequest:
+          $ref: '#/components/schemas/HttpRequest'
+    HttpRequest:
+      type: object
+      required:
+        - url
+      properties:
+        method:
+          $ref: '#/components/schemas/HttpMethod'
+        body:
+          $ref: '#/components/schemas/HttpBody'
+        url:
+          type: string
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pair'
     ContentType:
       type: string
       enum: ["TEXT", "JSON", "XML"]
