@@ -21,7 +21,7 @@ openapi-generator generate -i openapi.yaml -g go \
 
 ```bash
 openapi-generator generate -i openapi.yaml -g typescript-fetch -o ./ts-sdk \
-   --additional-properties=npmName=argus-ts-sdk
+   --additional-properties=npmName=@boardware/argus-ts-sdk
 ```
 
 ```

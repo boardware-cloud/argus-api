@@ -255,8 +255,6 @@ components:
             $ref: '#/components/schemas/Notification'
         body:
           $ref: '#/components/schemas/HttpBody'
-        httpRequest:
-          $ref: '#/components/schemas/HttpRequest'
     HttpRequest:
       type: object
       required:
