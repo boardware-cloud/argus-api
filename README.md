@@ -25,7 +25,7 @@ openapi-generator generate -i openapi.yaml -g typescript-fetch -o ./ts-sdk \
 ```
 
 ```
-GOPRIVATE=gitea.svc.boardware.com/bwc/uptime-api go get -u -f gitea.svc.boardware.com/bwc/uptime-api
+openapi-go-generator -o . -p argusapi
 ```
 
 ```

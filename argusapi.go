@@ -6,6 +6,53 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Pagination struct {
+	Limit int64 `json:"limit"`
+	Total int64 `json:"total"`
+	Index int64 `json:"index"`
+}
+type MonitoringRecord struct {
+	Id           string           `json:"id"`
+	MonitorId    string           `json:"monitorId"`
+	CheckedAt    int64            `json:"checkedAt"`
+	StatusCode   string           `json:"statusCode"`
+	ResponseTime *int64           `json:"responseTime,omitempty"`
+	Result       MonitoringResult `json:"result"`
+}
+type PutMonitorRequest struct {
+	Timeout              int64          `json:"timeout"`
+	Name                 string         `json:"name"`
+	Interval             int64          `json:"interval"`
+	Method               *HttpMethod    `json:"method,omitempty"`
+	NotificationInterval int64          `json:"notificationInterval"`
+	Notifications        []Notification `json:"notifications"`
+	Body                 *HttpBody      `json:"body,omitempty"`
+	Type                 MonitorType    `json:"type"`
+	Retries              int64          `json:"retries"`
+	Headers              *[]Pair        `json:"headers,omitempty"`
+	AcceptedStatusCodes  *[]string      `json:"acceptedStatusCodes,omitempty"`
+	Description          string         `json:"description"`
+	Status               MonitorStatus  `json:"status"`
+	Url                  string         `json:"url"`
+}
+type Notification struct {
+	Type           NotificationType `json:"type"`
+	EmailReceivers *EmailReceivers  `json:"emailReceivers,omitempty"`
+}
+type Pair struct {
+	Left  string `json:"left"`
+	Right string `json:"right"`
+}
+type MonitorList struct {
+	Data       []Monitor  `json:"data"`
+	Pagination Pagination `json:"pagination"`
+}
+type HttpBody struct {
+	ContentType *ContentType `json:"contentType,omitempty"`
+	Raw         *string      `json:"raw,omitempty"`
+	FormPayload *[]Pair      `json:"formPayload,omitempty"`
+	Form        BodyForm     `json:"form"`
+}
 type MonitoringRecordList struct {
 	Data       []MonitoringRecord `json:"data"`
 	Pagination Pagination         `json:"pagination"`
@@ -15,94 +62,39 @@ type Report struct {
 	Period         *int64          `json:"period,omitempty"`
 	EmailReceivers *EmailReceivers `json:"emailReceivers,omitempty"`
 }
-type EmailReceivers struct {
-	To  []string `json:"to"`
-	Cc  []string `json:"cc"`
-	Bcc []string `json:"bcc"`
-}
-type PutMonitorRequest struct {
-	Notifications        []Notification `json:"notifications"`
-	Name                 string         `json:"name"`
-	Status               MonitorStatus  `json:"status"`
-	Url                  string         `json:"url"`
-	Retries              int64          `json:"retries"`
-	AcceptedStatusCodes  *[]string      `json:"acceptedStatusCodes,omitempty"`
-	Description          string         `json:"description"`
-	Headers              *[]Pair        `json:"headers,omitempty"`
-	Body                 *HttpBody      `json:"body,omitempty"`
-	HttpRequest          *HttpRequest   `json:"httpRequest,omitempty"`
+type Monitor struct {
 	Timeout              int64          `json:"timeout"`
-	Method               *HttpMethod    `json:"method,omitempty"`
-	Type                 MonitorType    `json:"type"`
-	Interval             int64          `json:"interval"`
+	Status               MonitorStatus  `json:"status"`
+	Retries              int64          `json:"retries"`
 	NotificationInterval int64          `json:"notificationInterval"`
+	Id                   string         `json:"id"`
+	Description          string         `json:"description"`
+	Type                 MonitorType    `json:"type"`
+	Url                  string         `json:"url"`
+	Body                 *HttpBody      `json:"body,omitempty"`
+	Name                 string         `json:"name"`
+	Headers              *[]Pair        `json:"headers,omitempty"`
+	AcceptedStatusCodes  *[]string      `json:"acceptedStatusCodes,omitempty"`
+	Interval             int64          `json:"interval"`
+	Method               *HttpMethod    `json:"method,omitempty"`
+	Notifications        []Notification `json:"notifications"`
 }
 type HttpRequest struct {
+	Method  *HttpMethod `json:"method,omitempty"`
 	Body    *HttpBody   `json:"body,omitempty"`
 	Url     string      `json:"url"`
 	Headers *[]Pair     `json:"headers,omitempty"`
-	Method  *HttpMethod `json:"method,omitempty"`
 }
-type Monitor struct {
-	Name                 string         `json:"name"`
-	Retries              int64          `json:"retries"`
-	Method               *HttpMethod    `json:"method,omitempty"`
-	Notifications        []Notification `json:"notifications"`
-	Description          string         `json:"description"`
-	Interval             int64          `json:"interval"`
-	Timeout              int64          `json:"timeout"`
-	Status               MonitorStatus  `json:"status"`
-	Url                  string         `json:"url"`
-	AcceptedStatusCodes  *[]string      `json:"acceptedStatusCodes,omitempty"`
-	NotificationInterval int64          `json:"notificationInterval"`
-	Id                   string         `json:"id"`
-	Type                 MonitorType    `json:"type"`
-	Headers              *[]Pair        `json:"headers,omitempty"`
-	Body                 *HttpBody      `json:"body,omitempty"`
+type EmailReceivers struct {
+	Bcc []string `json:"bcc"`
+	To  []string `json:"to"`
+	Cc  []string `json:"cc"`
 }
-type MonitorList struct {
-	Data       []Monitor  `json:"data"`
-	Pagination Pagination `json:"pagination"`
-}
-type MonitoringRecord struct {
-	CheckedAt    int64            `json:"checkedAt"`
-	StatusCode   string           `json:"statusCode"`
-	ResponseTime *int64           `json:"responseTime,omitempty"`
-	Result       MonitoringResult `json:"result"`
-	Id           string           `json:"id"`
-	MonitorId    string           `json:"monitorId"`
-}
-type Pagination struct {
-	Index int64 `json:"index"`
-	Limit int64 `json:"limit"`
-	Total int64 `json:"total"`
-}
-type Pair struct {
-	Left  string `json:"left"`
-	Right string `json:"right"`
-}
-type HttpBody struct {
-	Form        BodyForm     `json:"form"`
-	ContentType *ContentType `json:"contentType,omitempty"`
-	Raw         *string      `json:"raw,omitempty"`
-	FormPayload *[]Pair      `json:"formPayload,omitempty"`
-}
-type Notification struct {
-	Type           NotificationType `json:"type"`
-	EmailReceivers *EmailReceivers  `json:"emailReceivers,omitempty"`
-}
-type BodyForm string
+type ContentType string
 
-const RAW BodyForm = "RAW"
-const X_WWW_FORM_URLENCODED BodyForm = "X_WWW_FORM_URLENCODED"
-
-type NotificationType string
-
-const EMAIL NotificationType = "EMAIL"
-
-type MonitorType string
-
-const HTTP MonitorType = "HTTP"
+const TEXT ContentType = "TEXT"
+const JSON ContentType = "JSON"
+const XML ContentType = "XML"
 
 type HttpMethod string
 
@@ -117,22 +109,29 @@ type Ordering string
 const ASCENDING Ordering = "ASCENDING"
 const DESCENDING Ordering = "DESCENDING"
 
-type MonitorStatus string
+type BodyForm string
 
-const ACTIVED MonitorStatus = "ACTIVED"
-const DISACTIVED MonitorStatus = "DISACTIVED"
-
-type ContentType string
-
-const TEXT ContentType = "TEXT"
-const JSON ContentType = "JSON"
-const XML ContentType = "XML"
+const RAW BodyForm = "RAW"
+const X_WWW_FORM_URLENCODED BodyForm = "X_WWW_FORM_URLENCODED"
 
 type MonitoringResult string
 
 const OK MonitoringResult = "OK"
 const TIMEOUT MonitoringResult = "TIMEOUT"
 const DOWN MonitoringResult = "DOWN"
+
+type MonitorStatus string
+
+const ACTIVED MonitorStatus = "ACTIVED"
+const DISACTIVED MonitorStatus = "DISACTIVED"
+
+type MonitorType string
+
+const HTTP MonitorType = "HTTP"
+
+type NotificationType string
+
+const EMAIL NotificationType = "EMAIL"
 
 type MonitorApiInterface interface {
 	CreateMonitor(gin_context *gin.Context, gin_body PutMonitorRequest)
