@@ -11,6 +11,8 @@ servers:
 tags:
   - name: Monitor
     description: Api of monitor
+  - name: Reserved
+    description: Api of reserved
 paths:
   /monitors:
     post:
@@ -102,6 +104,23 @@ paths:
       responses:
         '204':
           description: Success delete uptime monitor
+  /reserved:
+    post:
+      tags:
+        - Monitor
+      operationId: CreateReservedMonitor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReservedRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reserved'
   /monitors/{id}/records:
     get:
       tags:
@@ -127,6 +146,32 @@ paths:
                 $ref: '#/components/schemas/MonitoringRecordList'
 components:
   schemas:
+    CreateReservedRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+        startAt:
+          type: integer
+          format: int64
+        expiredAt:
+          type: integer
+          format: int64
+    Reserved:
+      type: object
+      required:
+        - id
+        - startAt
+        - expiredAt
+      properties:
+        id:
+          type: string
+        startAt:
+          type: integer
+          format: int64
+        expiredAt:
+          type: integer
+          format: int64
     Monitor:
       type: object
       required:
