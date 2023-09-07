@@ -104,23 +104,6 @@ paths:
       responses:
         '204':
           description: Success delete uptime monitor
-  /reserved:
-    post:
-      tags:
-        - Monitor
-      operationId: CreateReservedMonitor
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateReservedRequest'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Reserved'
   /monitors/{id}/records:
     get:
       tags:
@@ -144,6 +127,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MonitoringRecordList'
+  /reserved:
+    post:
+      tags:
+        - Reserved
+      operationId: CreateReservedMonitor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReservedRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reserved'
 components:
   schemas:
     CreateReservedRequest:
