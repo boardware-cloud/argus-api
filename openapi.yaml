@@ -268,11 +268,6 @@ components:
           $ref: '#/components/schemas/Pagination'
     PutMonitorRequest:
       type: object
-      required:
-        - name
-        - description
-        - type
-        - status
       properties:
         name:
           type: string
