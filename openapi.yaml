@@ -271,14 +271,8 @@ components:
       required:
         - name
         - description
-        - interval
-        - timeout
         - type
-        - url
-        - notifications
-        - notificationInterval
         - status
-        - retries
       properties:
         name:
           type: string
@@ -286,6 +280,17 @@ components:
           type: string
         type:
           $ref: '#/components/schemas/MonitorType'
+        status:
+          $ref: '#/components/schemas/MonitorStatus'
+        httpMonitor:
+          $ref: '#/components/schemas/HttpMonitor'
+        pingMonitor:
+          $ref: '#/components/schemas/PingMonitor'
+    HttpMonitor:
+      type: object
+      properties:
+        url:
+          type: string
         interval:
           description: Check interval in seconds
           type: integer
@@ -294,15 +299,9 @@ components:
           description: Timeout in seconds
           type: integer
           format: int64
-        status:
-          $ref: '#/components/schemas/MonitorStatus'
-        url:
-          type: string
         retries:
           type: integer
           format: int64
-        method:
-          $ref: '#/components/schemas/HttpMethod'
         headers:
           type: array
           items:
@@ -311,15 +310,24 @@ components:
           type: array
           items:
             type: string
-        notificationInterval:
-          type: integer
-          format: int64
-        notifications:
-          type: array
-          items:
-            $ref: '#/components/schemas/Notification'
         body:
           $ref: '#/components/schemas/HttpBody'
+    PingMonitor:
+      type: object
+      properties:
+        url:
+          type: string
+        interval:
+          description: Check interval in seconds
+          type: integer
+          format: int64
+        timeout:
+          description: Timeout in seconds
+          type: integer
+          format: int64
+        retries:
+          type: integer
+          format: int64
     HttpRequest:
       type: object
       required:
