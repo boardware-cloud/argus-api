@@ -342,7 +342,7 @@ components:
       enum: ["RAW", "X_WWW_FORM_URLENCODED"]
     MonitorType:
       type: string
-      enum: [ HTTP ]
+      enum: [ HTTP, PING ]
     MonitoringRecord:
       description: 'Monitoring record'
       type: object
