@@ -247,8 +247,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Notification'
-        body:
-          $ref: '#/components/schemas/HttpBody'
     MonitorStatus:
       description: 'Monitor Status'
       type: string
@@ -284,6 +282,8 @@ components:
     HttpMonitor:
       type: object
       properties:
+        method:
+          $ref: '#/components/schemas/HttpMethod'
         url:
           type: string
         interval:
@@ -305,8 +305,6 @@ components:
           type: array
           items:
             type: string
-        body:
-          $ref: '#/components/schemas/HttpBody'
     PingMonitor:
       type: object
       properties:
@@ -330,8 +328,6 @@ components:
       properties:
         method:
           $ref: '#/components/schemas/HttpMethod'
-        body:
-          $ref: '#/components/schemas/HttpBody'
         url:
           type: string
         headers:
@@ -344,21 +340,6 @@ components:
     BodyForm:
       type: string
       enum: ["RAW", "X_WWW_FORM_URLENCODED"]
-    HttpBody:
-      type: object
-      required:
-        - form
-      properties:
-        form:
-          $ref: '#/components/schemas/BodyForm'
-        contentType:
-          $ref: '#/components/schemas/ContentType'
-        raw:
-          type: string
-        formPayload:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pair'
     MonitorType:
       type: string
       enum: [ HTTP ]
