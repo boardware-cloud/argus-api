@@ -215,38 +215,10 @@ components:
           type: string
         type:
           $ref: '#/components/schemas/MonitorType'
-        interval:
-          description: Check interval in seconds
-          type: integer
-          format: int64
-        timeout:
-          description: Timeout in seconds
-          type: integer
-          format: int64
-        status:
-          $ref: '#/components/schemas/MonitorStatus'
-        url:
-          type: string
-        retries:
-          type: integer
-          format: int64
-        method:
-          $ref: '#/components/schemas/HttpMethod'
-        headers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pair'
-        acceptedStatusCodes:
-          type: array
-          items:
-            type: string
-        notificationInterval:
-          type: integer
-          format: int64
-        notifications:
-          type: array
-          items:
-            $ref: '#/components/schemas/Notification'
+        httpMonitor:
+          $ref: '#/components/schemas/HttpMonitor'
+        pingMonitor:
+          $ref: '#/components/schemas/PingMonitor'
     MonitorStatus:
       description: 'Monitor Status'
       type: string
