@@ -198,14 +198,7 @@ components:
         - id
         - name
         - description
-        - interval
-        - timeout
         - type
-        - url
-        - notifications
-        - notificationInterval
-        - status
-        - retries
       properties:
         id:
           type: string
@@ -219,6 +212,8 @@ components:
           $ref: '#/components/schemas/HttpMonitor'
         pingMonitor:
           $ref: '#/components/schemas/PingMonitor'
+        notificationGroup:
+          $ref: '#/components/schemas/NotificationGroup'
     MonitorStatus:
       description: 'Monitor Status'
       type: string
@@ -251,6 +246,8 @@ components:
           $ref: '#/components/schemas/HttpMonitor'
         pingMonitor:
           $ref: '#/components/schemas/PingMonitor'
+        notificationGroup:
+          $ref: '#/components/schemas/NotificationGroup'
     HttpMonitor:
       type: object
       properties:
@@ -386,11 +383,24 @@ components:
           type: array
           items:
             type: string
+    NotificationGroup:
+      type: object
+      properties:
+        interval:
+          type: integer
+          format: int64
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
     Notification:
       type: object
       required:
         - type
       properties:
+        interval:
+          type: integer
+          format: int64
         type:
           $ref: '#/components/schemas/NotificationType'
         emailReceivers:
