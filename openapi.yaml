@@ -319,21 +319,13 @@ components:
       description: 'Monitoring record'
       type: object
       required:
-        - id
-        - monitorId
         - checkedAt
-        - statusCode
         - result
+        - responseTime
       properties:
-        id:
-          type: string
-        monitorId:
-          type: string
         checkedAt:
           type: integer
           format: int64
-        statusCode:
-          type: string
         responseTime:
           type: integer
           format: int64
