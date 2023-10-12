@@ -255,6 +255,8 @@ components:
           $ref: '#/components/schemas/HttpMethod'
         url:
           type: string
+        status:
+          $ref: '#/components/schemas/MonitorStatus'
         interval:
           description: Check interval in seconds
           type: integer
