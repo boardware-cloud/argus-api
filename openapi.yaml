@@ -199,6 +199,7 @@ components:
         - name
         - description
         - type
+        - status
       properties:
         id:
           type: string
@@ -206,6 +207,8 @@ components:
           type: string
         description:
           type: string
+        status:
+          $ref: '#/components/schemas/MonitorStatus'
         type:
           $ref: '#/components/schemas/MonitorType'
         httpMonitor:
@@ -255,8 +258,6 @@ components:
           $ref: '#/components/schemas/HttpMethod'
         url:
           type: string
-        status:
-          $ref: '#/components/schemas/MonitorStatus'
         interval:
           description: Check interval in seconds
           type: integer
