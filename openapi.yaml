@@ -398,7 +398,12 @@ components:
           format: int64
         type:
           $ref: '#/components/schemas/NotificationType'
-        emailReceivers:
+        email:
+          $ref: '#/components/schemas/EmailNotification'
+    EmailNotification:
+      type: object
+      properties:
+        receivers:
           $ref: '#/components/schemas/EmailReceivers'
     NotificationType:
       type: string
