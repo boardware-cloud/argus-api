@@ -339,7 +339,7 @@ components:
       properties:
         data:
           type: array
-          items: 
+          items:
             $ref: '#/components/schemas/MonitoringRecord'
         pagination:
           $ref: '#/components/schemas/Pagination'
