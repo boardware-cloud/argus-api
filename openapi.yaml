@@ -280,38 +280,15 @@ components:
     PingMonitor:
       type: object
       properties:
-        url:
+        host:
           type: string
         interval:
           description: Check interval in seconds
           type: integer
           format: int64
-        timeout:
-          description: Timeout in seconds
-          type: integer
-          format: int64
         retries:
           type: integer
           format: int64
-    HttpRequest:
-      type: object
-      required:
-        - url
-      properties:
-        method:
-          $ref: '#/components/schemas/HttpMethod'
-        url:
-          type: string
-        headers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pair'
-    ContentType:
-      type: string
-      enum: ["TEXT", "JSON", "XML"]
-    BodyForm:
-      type: string
-      enum: ["RAW", "X_WWW_FORM_URLENCODED"]
     MonitorType:
       type: string
       enum: [ HTTP, PING ]

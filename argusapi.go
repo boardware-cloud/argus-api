@@ -6,127 +6,101 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Report struct {
-	EmailReceivers *EmailReceivers `json:"emailReceivers,omitempty"`
-	Cron           *string         `json:"cron,omitempty"`
-	Period         *int64          `json:"period,omitempty"`
-}
 type Pagination struct {
 	Index int64 `json:"index"`
 	Limit int64 `json:"limit"`
 	Total int64 `json:"total"`
 }
-type ReservedList struct {
-	Data       *[]Reserved `json:"data,omitempty"`
-	Pagination *Pagination `json:"pagination,omitempty"`
-}
-type MonitoringRecordList struct {
-	Data       []MonitoringRecord `json:"data"`
-	Pagination Pagination         `json:"pagination"`
-}
-type EmailNotification struct {
-	Receivers *EmailReceivers `json:"receivers,omitempty"`
-}
-type Pair struct {
-	Left  string `json:"left"`
-	Right string `json:"right"`
-}
-type Reserved struct {
-	StartAt   int64  `json:"startAt"`
-	ExpiredAt int64  `json:"expiredAt"`
-	Id        string `json:"id"`
-}
-type HttpRequest struct {
-	Headers *[]Pair     `json:"headers,omitempty"`
-	Method  *HttpMethod `json:"method,omitempty"`
-	Url     string      `json:"url"`
-}
-type Notification struct {
-	Interval *int64             `json:"interval,omitempty"`
-	Type     NotificationType   `json:"type"`
-	Email    *EmailNotification `json:"email,omitempty"`
-}
-type PingMonitor struct {
-	Url      *string `json:"url,omitempty"`
-	Interval *int64  `json:"interval,omitempty"`
-	Timeout  *int64  `json:"timeout,omitempty"`
-	Retries  *int64  `json:"retries,omitempty"`
-}
 type NotificationGroup struct {
 	Interval      *int64          `json:"interval,omitempty"`
 	Notifications *[]Notification `json:"notifications,omitempty"`
 }
-type HttpMonitor struct {
-	Method              *HttpMethod `json:"method,omitempty"`
-	Url                 *string     `json:"url,omitempty"`
-	Interval            *int64      `json:"interval,omitempty"`
-	Timeout             *int64      `json:"timeout,omitempty"`
-	Retries             *int64      `json:"retries,omitempty"`
-	Headers             *[]Pair     `json:"headers,omitempty"`
-	AcceptedStatusCodes *[]string   `json:"acceptedStatusCodes,omitempty"`
+type MonitorList struct {
+	Data       []Monitor  `json:"data"`
+	Pagination Pagination `json:"pagination"`
 }
-type CreateReservedRequest struct {
-	StartAt   *int64  `json:"startAt,omitempty"`
-	ExpiredAt *int64  `json:"expiredAt,omitempty"`
-	AccountId *string `json:"accountId,omitempty"`
-}
-type Monitor struct {
-	Name              string             `json:"name"`
-	Description       string             `json:"description"`
-	Status            MonitorStatus      `json:"status"`
-	Type              MonitorType        `json:"type"`
-	HttpMonitor       *HttpMonitor       `json:"httpMonitor,omitempty"`
-	PingMonitor       *PingMonitor       `json:"pingMonitor,omitempty"`
-	NotificationGroup *NotificationGroup `json:"notificationGroup,omitempty"`
-	Id                string             `json:"id"`
-}
-type MonitoringRecord struct {
-	CheckedAt    int64            `json:"checkedAt"`
-	ResponseTime int64            `json:"responseTime"`
-	Result       MonitoringResult `json:"result"`
-}
-type PutMonitorRequest struct {
-	NotificationGroup *NotificationGroup `json:"notificationGroup,omitempty"`
-	Name              *string            `json:"name,omitempty"`
-	Description       *string            `json:"description,omitempty"`
-	Type              *MonitorType       `json:"type,omitempty"`
-	Status            *MonitorStatus     `json:"status,omitempty"`
-	HttpMonitor       *HttpMonitor       `json:"httpMonitor,omitempty"`
-	PingMonitor       *PingMonitor       `json:"pingMonitor,omitempty"`
+type MonitoringRecordList struct {
+	Data       []MonitoringRecord `json:"data"`
+	Pagination Pagination         `json:"pagination"`
 }
 type EmailReceivers struct {
 	To  []string `json:"to"`
 	Cc  []string `json:"cc"`
 	Bcc []string `json:"bcc"`
 }
-type MonitorList struct {
-	Data       []Monitor  `json:"data"`
-	Pagination Pagination `json:"pagination"`
+type Notification struct {
+	Interval *int64             `json:"interval,omitempty"`
+	Type     NotificationType   `json:"type"`
+	Email    *EmailNotification `json:"email,omitempty"`
 }
-type NotificationType string
-
-const EMAIL NotificationType = "EMAIL"
-
-type MonitorType string
-
-const HTTP MonitorType = "HTTP"
-const PING MonitorType = "PING"
-
-type ContentType string
-
-const TEXT ContentType = "TEXT"
-const JSON ContentType = "JSON"
-const XML ContentType = "XML"
-
+type CreateReservedRequest struct {
+	ExpiredAt *int64  `json:"expiredAt,omitempty"`
+	AccountId *string `json:"accountId,omitempty"`
+	StartAt   *int64  `json:"startAt,omitempty"`
+}
+type Pair struct {
+	Left  string `json:"left"`
+	Right string `json:"right"`
+}
+type PingMonitor struct {
+	Host     *string `json:"host,omitempty"`
+	Interval *int64  `json:"interval,omitempty"`
+	Retries  *int64  `json:"retries,omitempty"`
+}
+type MonitoringRecord struct {
+	CheckedAt    int64            `json:"checkedAt"`
+	ResponseTime int64            `json:"responseTime"`
+	Result       MonitoringResult `json:"result"`
+}
+type EmailNotification struct {
+	Receivers *EmailReceivers `json:"receivers,omitempty"`
+}
+type PutMonitorRequest struct {
+	Name              *string            `json:"name,omitempty"`
+	Description       *string            `json:"description,omitempty"`
+	Type              *MonitorType       `json:"type,omitempty"`
+	Status            *MonitorStatus     `json:"status,omitempty"`
+	HttpMonitor       *HttpMonitor       `json:"httpMonitor,omitempty"`
+	PingMonitor       *PingMonitor       `json:"pingMonitor,omitempty"`
+	NotificationGroup *NotificationGroup `json:"notificationGroup,omitempty"`
+}
+type HttpMonitor struct {
+	Retries             *int64      `json:"retries,omitempty"`
+	Headers             *[]Pair     `json:"headers,omitempty"`
+	AcceptedStatusCodes *[]string   `json:"acceptedStatusCodes,omitempty"`
+	Method              *HttpMethod `json:"method,omitempty"`
+	Url                 *string     `json:"url,omitempty"`
+	Interval            *int64      `json:"interval,omitempty"`
+	Timeout             *int64      `json:"timeout,omitempty"`
+}
+type Monitor struct {
+	NotificationGroup *NotificationGroup `json:"notificationGroup,omitempty"`
+	Id                string             `json:"id"`
+	Name              string             `json:"name"`
+	Description       string             `json:"description"`
+	Status            MonitorStatus      `json:"status"`
+	Type              MonitorType        `json:"type"`
+	HttpMonitor       *HttpMonitor       `json:"httpMonitor,omitempty"`
+	PingMonitor       *PingMonitor       `json:"pingMonitor,omitempty"`
+}
+type Report struct {
+	EmailReceivers *EmailReceivers `json:"emailReceivers,omitempty"`
+	Cron           *string         `json:"cron,omitempty"`
+	Period         *int64          `json:"period,omitempty"`
+}
+type Reserved struct {
+	Id        string `json:"id"`
+	StartAt   int64  `json:"startAt"`
+	ExpiredAt int64  `json:"expiredAt"`
+}
+type ReservedList struct {
+	Pagination *Pagination `json:"pagination,omitempty"`
+	Data       *[]Reserved `json:"data,omitempty"`
+}
 type MonitorStatus string
 
 const ACTIVED MonitorStatus = "ACTIVED"
 const DISACTIVED MonitorStatus = "DISACTIVED"
-
-type Ordering string
-
-const ASCENDING Ordering = "ASCENDING"
-const DESCENDING Ordering = "DESCENDING"
 
 type MonitoringResult string
 
@@ -142,10 +116,19 @@ const POST HttpMethod = "POST"
 const PUT HttpMethod = "PUT"
 const PATCH HttpMethod = "PATCH"
 
-type BodyForm string
+type MonitorType string
 
-const RAW BodyForm = "RAW"
-const X_WWW_FORM_URLENCODED BodyForm = "X_WWW_FORM_URLENCODED"
+const HTTP MonitorType = "HTTP"
+const PING MonitorType = "PING"
+
+type NotificationType string
+
+const EMAIL NotificationType = "EMAIL"
+
+type Ordering string
+
+const ASCENDING Ordering = "ASCENDING"
+const DESCENDING Ordering = "DESCENDING"
 
 type MonitorApiInterface interface {
 	CreateMonitor(gin_context *gin.Context, gin_body PutMonitorRequest)
@@ -217,15 +200,10 @@ func MonitorApiInterfaceMounter(gin_router *gin.Engine, gwg_api_label MonitorApi
 }
 
 type ReservedApiInterface interface {
-	ListReserved(gin_context *gin.Context)
 	CreateReservedMonitor(gin_context *gin.Context, gin_body CreateReservedRequest)
+	ListReserved(gin_context *gin.Context)
 }
 
-func ListReservedBuilder(api ReservedApiInterface) func(c *gin.Context) {
-	return func(gin_context *gin.Context) {
-		api.ListReserved(gin_context)
-	}
-}
 func CreateReservedMonitorBuilder(api ReservedApiInterface) func(c *gin.Context) {
 	return func(gin_context *gin.Context) {
 		var createReservedRequest CreateReservedRequest
@@ -236,9 +214,14 @@ func CreateReservedMonitorBuilder(api ReservedApiInterface) func(c *gin.Context)
 		api.CreateReservedMonitor(gin_context, createReservedRequest)
 	}
 }
+func ListReservedBuilder(api ReservedApiInterface) func(c *gin.Context) {
+	return func(gin_context *gin.Context) {
+		api.ListReserved(gin_context)
+	}
+}
 func ReservedApiInterfaceMounter(gin_router *gin.Engine, gwg_api_label ReservedApiInterface) {
-	gin_router.GET("/reserved", ListReservedBuilder(gwg_api_label))
 	gin_router.POST("/reserved", CreateReservedMonitorBuilder(gwg_api_label))
+	gin_router.GET("/reserved", ListReservedBuilder(gwg_api_label))
 }
 func stringToInt32(s string) int32 {
 	if value, err := strconv.ParseInt(s, 10, 32); err == nil {
