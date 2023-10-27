@@ -382,6 +382,8 @@ components:
       properties:
         receivers:
           $ref: '#/components/schemas/EmailReceivers'
+        template:
+          type: string
     NotificationType:
       type: string
       enum: [EMAIL]
